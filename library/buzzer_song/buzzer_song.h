@@ -1,0 +1,19 @@
+#include "Arduino.h"
+#ifndef MyLibrary_H
+#define MyLibrary_H
+void caribbean();
+void harrypotter();
+void pacman();
+void starWars();
+void mario();
+void tetris();
+void minuetG();
+void lionKing();
+void symphonyNo9();
+void jigglypuff();
+void starTrek();
+void badinerie();
+void godFather();
+void zeldaTheme();
+void cannon();
+#endif
