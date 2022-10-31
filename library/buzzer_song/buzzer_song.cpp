@@ -1,7 +1,13 @@
 #include "Arduino.h"
 #include "avr/pgmspace.h"
+#include <SPI.h>
+#include <MFRC522.h>
 
-int buzzer = 7;            //buzzer pin number
+#define SS_PIN 10
+#define RST_PIN 9
+
+MFRC522 rfid_(SS_PIN, RST_PIN);
+
 
 #define NOTE_B0  31
 #define NOTE_C1  33
@@ -616,7 +622,7 @@ const int num_starWars = sizeof(melody_starWars_raw) / sizeof(melody_starWars_ra
 
 //harry potter melody
 const int melody_harry_raw[] PROGMEM = {
-    REST, 2, NOTE_D4, 4,
+    NOTE_D4, 4,
     NOTE_G4, -4, NOTE_AS4, 8, NOTE_A4, 4,
     NOTE_G4, 2, NOTE_D5, 4,
     NOTE_C5, -2,
@@ -784,7 +790,9 @@ const int durations_raw[] PROGMEM = {
 const int num_durations = sizeof(durations_raw) / sizeof(durations_raw[0]);
 
 
-void mario() {  //Mario melody
+void mario(int buzzer, int check_id) {  //Mario melody
+    int checking_ = 1;
+
     int melody_mario[num_mario];
     for (int i = 0; i < num_mario; i++) {
         melody_mario[i] = pgm_read_word(&melody_mario_raw[i]);
@@ -799,7 +807,8 @@ void mario() {  //Mario melody
     int divider_mario = 0, noteDuration_mario = 0;
 
     for (int thisNote = 0; thisNote < notes_mario * 2; thisNote = thisNote + 2) {
-
+        checking_ = 1;
+        
         divider_mario = melody_mario[thisNote + 1];
         if (divider_mario > 0) {
             noteDuration_mario = (wholenote_mario) / divider_mario;
@@ -812,16 +821,28 @@ void mario() {  //Mario melody
         delay(noteDuration_mario);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void harrypotter() {
+void harrypotter(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_harry[num_harry];
     for (int i = 0; i < num_harry; i++) {
         melody_harry[i] = pgm_read_word(&melody_harry_raw[i]);
     }
-    
-    int tempo_harry = 144;
+
+    int tempo_harry = 152;
 
     int notes_harry = sizeof(melody_harry) / sizeof(melody_harry[0]) / 2;
 
@@ -830,6 +851,8 @@ void harrypotter() {
     int divider_harry = 0, noteDuration_harry = 0;
 
     for (int thisNote = 0; thisNote < notes_harry * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
         divider_harry = melody_harry[thisNote + 1];
         if (divider_harry > 0) {
             noteDuration_harry = (wholenote_harry) / divider_harry;
@@ -842,10 +865,22 @@ void harrypotter() {
         delay(noteDuration_harry);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void caribbean(){
+void caribbean(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int notes_pirate[num_pirate];
     for (int i = 0; i < num_pirate; i++) {
         notes_pirate[i] = pgm_read_word(&notes_pirate_raw[i]);
@@ -858,8 +893,9 @@ void caribbean(){
 
     const float tempo_pirate = 1.0;
     const int totalNotes = sizeof(notes_pirate) / sizeof(int);
-    for (int i = 0; i < totalNotes; i++)
-    {
+    for (int i = 0; i < totalNotes; i++){
+        checking_ = 1;
+
         const int currentNote = notes_pirate[i];
         float wait = durations[i] / tempo_pirate;
         if (currentNote != 0)
@@ -871,10 +907,22 @@ void caribbean(){
             noTone(buzzer);
         }
         delay(wait);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void pacman() {
+void pacman(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_pacman[num_pacman];
     for (int i = 0; i < num_pacman; i++) {
         melody_pacman[i] = pgm_read_word(&melody_pacman_raw[i]);
@@ -889,6 +937,8 @@ void pacman() {
     int divider_pacman = 0, noteDuration_pacman = 0;
 
     for (int thisNote = 0; thisNote < notes_pacman * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
         divider_pacman = melody_pacman[thisNote + 1];
         if (divider_pacman > 0) {
             noteDuration_pacman = (wholenote_pacman) / divider_pacman;
@@ -900,10 +950,22 @@ void pacman() {
         tone(buzzer, melody_pacman[thisNote], noteDuration_pacman * 0.9);
         delay(noteDuration_pacman);
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void starWars() {
+void starWars(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_starWars[num_starWars];
     for (int i = 0; i < num_starWars; i++) {
         melody_starWars[i] = pgm_read_word(&melody_starWars_raw[i]);
@@ -918,6 +980,8 @@ void starWars() {
     int divider_starWars = 0, noteDuration_starWars = 0;
 
     for (int thisNote = 0; thisNote < notes_starWars * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
         divider_starWars = melody_starWars[thisNote + 1];
         if (divider_starWars > 0) {
             noteDuration_starWars = (wholenote_starWars) / divider_starWars;
@@ -929,10 +993,22 @@ void starWars() {
         tone(buzzer, melody_starWars[thisNote], noteDuration_starWars * 0.9);
         delay(noteDuration_starWars);
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void tetris() {
+void tetris(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_tetris[num_tetris];
     for (int i = 0; i < num_tetris; i++) {
         melody_tetris[i] = pgm_read_word(&melody_tetris_raw[i]);
@@ -947,6 +1023,7 @@ void tetris() {
     int divider_tetris = 0, noteDuration_tetris = 0;
 
     for (int thisNote = 0; thisNote < notes_tetris * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
 
         divider_tetris = melody_tetris[thisNote + 1];
         if (divider_tetris > 0) {
@@ -962,10 +1039,22 @@ void tetris() {
         delay(noteDuration_tetris);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void minuetG() {
+void minuetG(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_minuetG[num_minuetG];
     for (int i = 0; i < num_minuetG; i++) {
         melody_minuetG[i] = pgm_read_word(&melody_minuetG_raw[i]);
@@ -980,6 +1069,8 @@ void minuetG() {
     int divider_minuetG = 0, noteDuration_minuetG = 0;
 
     for (int thisNote = 0; thisNote < notes_minuetG * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_minuetG = melody_minuetG[thisNote + 1];
         if (divider_minuetG > 0) {
@@ -995,10 +1086,22 @@ void minuetG() {
         delay(noteDuration_minuetG);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void lionKing() {
+void lionKing(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_lion[num_lion];
     for (int i = 0; i < num_lion; i++) {
         melody_lion[i] = pgm_read_word(&melody_lion_raw[i]);
@@ -1013,6 +1116,8 @@ void lionKing() {
     int divider_lion = 0, noteDuration_lion = 0;
 
     for (int thisNote = 0; thisNote < notes_lion * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_lion = melody_lion[thisNote + 1];
         if (divider_lion > 0) {
@@ -1028,10 +1133,22 @@ void lionKing() {
         delay(noteDuration_lion);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void symphonyNo9() {
+void symphonyNo9(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_symphonyNo9[num_symphonyNo9];
     for (int i = 0; i < num_symphonyNo9; i++) {
         melody_symphonyNo9[i] = pgm_read_word(&melody_symphonyNo9_raw[i]);
@@ -1046,6 +1163,8 @@ void symphonyNo9() {
     int divider_symphonyNo9 = 0, noteDuration_symphonyNo9 = 0;
 
     for (int thisNote = 0; thisNote < notes_symphonyNo9 * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_symphonyNo9 = melody_symphonyNo9[thisNote + 1];
         if (divider_symphonyNo9 > 0) {
@@ -1061,10 +1180,22 @@ void symphonyNo9() {
         delay(noteDuration_symphonyNo9);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void jigglypuff() {
+void jigglypuff(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_jigglypuff[num_jigglypuff];
     for (int i = 0; i < num_jigglypuff; i++) {
         melody_jigglypuff[i] = pgm_read_word(&melody_jigglypuff_raw[i]);
@@ -1079,6 +1210,8 @@ void jigglypuff() {
     int divider_jigglypuff = 0, noteDuration_jigglypuff = 0;
 
     for (int thisNote = 0; thisNote < notes_jigglypuff * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_jigglypuff = melody_jigglypuff[thisNote + 1];
         if (divider_jigglypuff > 0) {
@@ -1093,10 +1226,22 @@ void jigglypuff() {
         delay(noteDuration_jigglypuff);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void starTrek() {
+void starTrek(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_starTrek[num_starTrek];
     for (int i = 0; i < num_starTrek; i++) {
         melody_starTrek[i] = pgm_read_word(&melody_starTrek_raw[i]);
@@ -1111,6 +1256,8 @@ void starTrek() {
     int divider_starTrek = 0, noteDuration_starTrek = 0;
 
     for (int thisNote = 0; thisNote < notes_starTrek * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_starTrek = melody_starTrek[thisNote + 1];
         if (divider_starTrek > 0) {
@@ -1126,10 +1273,22 @@ void starTrek() {
         delay(noteDuration_starTrek);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void badinerie() {
+void badinerie(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_badinerie[num_badinerie];
     for (int i = 0; i < num_badinerie; i++) {
         melody_badinerie[i] = pgm_read_word(&melody_badinerie_raw[i]);
@@ -1144,6 +1303,8 @@ void badinerie() {
     int divider_badinerie = 0, noteDuration_badinerie = 0;
 
     for (int thisNote = 0; thisNote < notes_badinerie * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_badinerie = melody_badinerie[thisNote + 1];
         if (divider_badinerie > 0) {
@@ -1159,10 +1320,22 @@ void badinerie() {
         delay(noteDuration_badinerie);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void godFather() {
+void godFather(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_godFather[num_godFather];
     for (int i = 0; i < num_godFather; i++) {
         melody_godFather[i] = pgm_read_word(&melody_godFather_raw[i]);
@@ -1177,6 +1350,8 @@ void godFather() {
     int divider_godFather = 0, noteDuration_godFather = 0;
 
     for (int thisNote = 0; thisNote < notes_godFather * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_godFather = melody_godFather[thisNote + 1];
         if (divider_godFather > 0) {
@@ -1192,10 +1367,22 @@ void godFather() {
         delay(noteDuration_godFather);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void zeldaTheme() {
+void zeldaTheme(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_zeldaTheme[num_zeldaTheme];
     for (int i = 0; i < num_zeldaTheme; i++) {
         melody_zeldaTheme[i] = pgm_read_word(&melody_zeldaTheme_raw[i]);
@@ -1210,6 +1397,8 @@ void zeldaTheme() {
     int divider_zeldaTheme = 0, noteDuration_zeldaTheme = 0;
 
     for (int thisNote = 0; thisNote < notes_zeldaTheme * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_zeldaTheme = melody_zeldaTheme[thisNote + 1];
         if (divider_zeldaTheme > 0) {
@@ -1224,10 +1413,22 @@ void zeldaTheme() {
         delay(noteDuration_zeldaTheme);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }
 
-void cannon() {
+void cannon(int buzzer, int check_id) {
+    int checking_ = 1;
+
     int melody_cannon[num_cannon];
     for (int i = 0; i < num_cannon; i++) {
         melody_cannon[i] = pgm_read_word(&melody_cannon_raw[i]);
@@ -1242,6 +1443,8 @@ void cannon() {
     int divider_cannon = 0, noteDuration_cannon = 0;
 
     for (int thisNote = 0; thisNote < notes_cannon * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
 
         divider_cannon = melody_cannon[thisNote + 1];
         if (divider_cannon > 0) {
@@ -1257,5 +1460,15 @@ void cannon() {
         delay(noteDuration_cannon);
 
         noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    break;
+            }
+        }
     }
 }

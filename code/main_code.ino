@@ -1,18 +1,18 @@
-#include <buzzer_song.h>  // buzzer ³ë·¡ ¶óÀÌºê·¯¸® Ãß°¡, buzzer pin number D7 °íÁ¤
+#include <buzzer_song.h>
 #include <SPI.h>
 #include <MFRC522.h>
 
 #define SS_PIN 10
 #define RST_PIN 9
 
+int buzzer = 7;  //buzzer í•€ ë²ˆí˜¸
+
 MFRC522 rfid(SS_PIN, RST_PIN);
 
-MFRC522::MIFARE_Key key;
-
-//NFC ½ºÆ¼Ä¿ ¾ÆÀÌµğ ÀÔ·Â
-byte first_id[] = { 84, 66, 131, 234};
-byte second_id[] = { 212, 64, 130, 234};
-byte third_id[] = { 132, 127, 124, 234};
+//NFC ìŠ¤í‹°ì»¤ ì•„ì´ë”” ì…ë ¥
+byte first_id[] = { 84, 66, 131, 234 };
+byte second_id[] = { 212, 64, 130, 234 };
+byte third_id[] = { 132, 127, 124, 234 };
 
 byte nuidPICC[4];
 int first_id_check = 1;
@@ -24,9 +24,6 @@ void setup() {
   Serial.begin(9600);
   SPI.begin();
   rfid.PCD_Init();
-  for (byte i = 0; i < 6; i++) {
-    key.keyByte[i] = 0xFF;
-  }
   for (int i = 0; i < 4; i++) {
     first_id_check = first_id_check + first_id[i];
     second_id_check = second_id_check + second_id[i];
@@ -44,68 +41,47 @@ void loop() {
     return;
 
   checking = 1;
-  Serial.println(F("The NUID tag is:"));
-  Serial.print(F("In hex: "));
-  printHex(rfid.uid.uidByte, rfid.uid.size);
-  Serial.println();
-  Serial.print(F("In dec: "));
-  printDec(rfid.uid.uidByte, rfid.uid.size);
-  Serial.println();
-  Serial.println();
+
   for (int i = 0; i < 4; i++) {
     checking = rfid.uid.uidByte[i] + checking;
   }
-  Serial.print(F("Ã¹ ¹øÂ° ÅÂ±×ÀÇ ½Äº° ¹øÈ£ : "));
+  Serial.print(F("ì²« ë²ˆì§¸ íƒœê·¸ì˜ ì‹ë³„ ë²ˆí˜¸ : "));
   Serial.println(first_id_check);
-  Serial.print(F("µÎ ¹øÂ° ÅÂ±×ÀÇ ½Äº° ¹øÈ£ : "));
+  Serial.print(F("ë‘ ë²ˆì§¸ íƒœê·¸ì˜ ì‹ë³„ ë²ˆí˜¸ : "));
   Serial.println(second_id_check);
-  Serial.print(F("¼¼ ¹øÂ° ÅÂ±×ÀÇ ½Äº° ¹øÈ£ : "));
+  Serial.print(F("ì„¸ ë²ˆì§¸ íƒœê·¸ì˜ ì‹ë³„ ë²ˆí˜¸ : "));
   Serial.println(third_id_check);
-  Serial.print(F("ÀÔ·ÂµÈ ÅÂ±×ÀÇ ½Äº° ¹øÈ£ : "));
+  Serial.print(F("ì…ë ¥ëœ íƒœê·¸ì˜ ì‹ë³„ ë²ˆí˜¸ : "));
   Serial.println(checking);
-  Serial.println(F("=========================¿¬ÁÖ ½ÃÀÛ========================="));
+  Serial.println(F("=========================ì—°ì£¼ ì‹œì‘========================="));
 
-  
-/* 15°î ¼±ÅÃ °¡´É
-** caribbean();       ¿µÈ­ Ä³¸®ºñ¾ÈÀÇ ÇØÀû ost
-** harrypotter();     ¿µÈ­ ÇØ¸®Æ÷ÅÍ ost
-** pacman();          °ÔÀÓ ÆÑ¸Ç Å×¸¶
-** starWars();        ¿µÈ­ ½ºÅ¸¿öÁî ost
-** mario();           °ÔÀÓ ½´ÆÛ¸¶¸®¿À Å×¸¶
-** tetris();          °ÔÀÓ Å×Æ®¸®½º Å×¸¶
-** minuetG();         Å¬·¡½Ä Minuet in G major/¹ÙÈå
-** lionKing();        ¿µÈ­ ¶óÀÌ¿ÂÅ· ost
-** symphonyNo9();     Å¬·¡½Ä ±³Çâ°î 9¹ø/º£Åäº¥
-** jigglypuff();      °ÔÀÓ Æ÷ÄÏ¸ó½ºÅÍ Çª¸°³ë·¡
-** starTrek();        µå¶ó¸¶ star trek ost
-** badinerie();       Å¬·¡½Ä ¹Ùµğ³×¸®/¹ÙÈå
-** godFather();       ¿µÈ­ ´ëºÎ ost
-** zeldaTheme();      °ÔÀÓ Á©´ÙÀÇ Àü¼³ Å×¸¶
-** cannon();          Å¬·¡½Ä Ä³³íº¯ÁÖ°î/ÆÄÇïº§
+
+  /* 15ê³¡ ì„ íƒ ê°€ëŠ¥
+** caribbean(buzzer, në²ˆì§¸ ì²´í¬);       ì˜í™” ìºë¦¬ë¹„ì•ˆì˜ í•´ì  ost
+** harrypotter(buzzer, në²ˆì§¸ ì²´í¬);     ì˜í™” í•´ë¦¬í¬í„° ost
+** pacman(buzzer, në²ˆì§¸ ì²´í¬);          ê²Œì„ íŒ©ë§¨ í…Œë§ˆ
+** starWars(buzzer, në²ˆì§¸ ì²´í¬);        ì˜í™” ìŠ¤íƒ€ì›Œì¦ˆ ost
+** mario(buzzer, në²ˆì§¸ ì²´í¬);           ê²Œì„ ìŠˆí¼ë§ˆë¦¬ì˜¤ í…Œë§ˆ
+** tetris(buzzer, në²ˆì§¸ ì²´í¬);          ê²Œì„ í…ŒíŠ¸ë¦¬ìŠ¤ í…Œë§ˆ
+** minuetG(buzzer, në²ˆì§¸ ì²´í¬);         í´ë˜ì‹ Minuet in G major/ë°”í
+** lionKing(buzzer, në²ˆì§¸ ì²´í¬);        ì˜í™” ë¼ì´ì˜¨í‚¹ ost
+** symphonyNo9(buzzer, në²ˆì§¸ ì²´í¬);     í´ë˜ì‹ êµí–¥ê³¡ 9ë²ˆ/ë² í† ë²¤
+** jigglypuff(buzzer, në²ˆì§¸ ì²´í¬);      ê²Œì„ í¬ì¼“ëª¬ìŠ¤í„° í‘¸ë¦°ë…¸ë˜
+** starTrek(buzzer, në²ˆì§¸ ì²´í¬);        ë“œë¼ë§ˆ star trek ost
+** badinerie(buzzer, në²ˆì§¸ ì²´í¬);       í´ë˜ì‹ ë°”ë””ë„¤ë¦¬/ë°”í
+** godFather(buzzer, në²ˆì§¸ ì²´í¬);       ì˜í™” ëŒ€ë¶€ ost
+** zeldaTheme(buzzer, në²ˆì§¸ ì²´í¬);      ê²Œì„ ì ¤ë‹¤ì˜ ì „ì„¤ í…Œë§ˆ
+** cannon(buzzer, në²ˆì§¸ ì²´í¬);          í´ë˜ì‹ ìºë…¼ë³€ì£¼ê³¡/íŒŒí—¬ë²¨
 */
-// RFID IDº° ³ë·¡ ¼³Á¤ ºÎºĞ
-  if (checking == first_id_check)       //Ã¹ ¹øÂ° IDÅÂ±× ³ë·¡ ¼³Á¤
-    caribbean();
-  else if (checking == second_id_check) //µÎ ¹øÂ° IDÅÂ±× ³ë·¡ ¼³Á¤
-    mario();
-  else if(checking == third_id_check)   //¼¼ ¹øÂ° IDÅÂ±× ³ë·¡ ¼³Á¤
-    lionKing();
+  // RFID IDë³„ ë…¸ë˜ ì„¤ì • ë¶€ë¶„
+  if (checking == first_id_check)  //ì²« ë²ˆì§¸ IDíƒœê·¸ ë…¸ë˜ ì„¤ì •
+    mario(buzzer, first_id_check);
+  else if (checking == second_id_check)  //ë‘ ë²ˆì§¸ IDíƒœê·¸ ë…¸ë˜ ì„¤ì •
+    pacman(buzzer, second_id_check);
+  else if (checking == third_id_check)  //ì„¸ ë²ˆì§¸ IDíƒœê·¸ ë…¸ë˜ ì„¤ì •
+    caribbean(buzzer, third_id_check);
 
   rfid.PICC_HaltA();
   rfid.PCD_StopCrypto1();
-  Serial.println(F("=========================¿¬ÁÖ ³¡========================="));
-}
-
-void printHex(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], HEX);
-  }
-}
-
-void printDec(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], DEC);
-  }
+  Serial.println(F("=========================ì—°ì£¼ ë========================="));
 }
