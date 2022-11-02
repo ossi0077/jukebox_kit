@@ -19,6 +19,7 @@ int first_id_check = 1;
 int second_id_check = 1;
 int third_id_check = 1;
 int checking = 1;
+int past_checking = 2;
 
 void setup() {
   Serial.begin(9600);
@@ -36,15 +37,17 @@ void setup() {
 void loop() {
   if (!rfid.PICC_IsNewCardPresent())
     return;
-
   if (!rfid.PICC_ReadCardSerial())
     return;
 
   checking = 1;
 
-  for (int i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++)
     checking = rfid.uid.uidByte[i] + checking;
-  }
+
+  if (past_checking == checking)
+    return;
+
   Serial.print(F("첫 번째 태그의 식별 번호 : "));
   Serial.println(first_id_check);
   Serial.print(F("두 번째 태그의 식별 번호 : "));
@@ -74,12 +77,13 @@ void loop() {
 ** cannon(buzzer, n번째 체크);          클래식 캐논변주곡/파헬벨
 */
   // RFID ID별 노래 설정 부분
-  if (checking == first_id_check)  //첫 번째 ID태그 노래 설정
-    mario(buzzer, first_id_check);
-  else if (checking == second_id_check)  //두 번째 ID태그 노래 설정
-    pacman(buzzer, second_id_check);
-  else if (checking == third_id_check)  //세 번째 ID태그 노래 설정
-    caribbean(buzzer, third_id_check);
+  if (checking == first_id_check) {  //첫 번째 ID태그 노래 설정
+    past_checking = tetris(buzzer, first_id_check);
+  } else if (checking == second_id_check) {  //두 번째 ID태그 노래 설정
+    past_checking = symphonyNo9(buzzer, second_id_check);
+  } else if (checking == third_id_check) {  //세 번째 ID태그 노래 설정
+    past_checking = jigglypuff(buzzer, third_id_check);
+  }
 
   rfid.PICC_HaltA();
   rfid.PCD_StopCrypto1();

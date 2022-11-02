@@ -3,10 +3,10 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define SS_PIN 10
-#define RST_PIN 9
+#define SS_PIN_ 10
+#define RST_PIN_ 9
 
-MFRC522 rfid_(SS_PIN, RST_PIN);
+MFRC522 rfid_(SS_PIN_, RST_PIN_);
 
 
 #define NOTE_B0  31
@@ -789,8 +789,62 @@ const int durations_raw[] PROGMEM = {
     125, 125, 125, 125, 125, 500 };
 const int num_durations = sizeof(durations_raw) / sizeof(durations_raw[0]);
 
+//Test melody
+const int melody_test_raw[] PROGMEM = {
+    NOTE_C4, 16, NOTE_D4, 16, NOTE_E4, 16,
+    NOTE_F4, 16, NOTE_G4, 16, NOTE_A4, 16, NOTE_B4, 16,
+    NOTE_C5, 16,
+};
+const int num_test = sizeof(melody_test_raw) / sizeof(melody_test_raw[0]);
 
-void mario(int buzzer, int check_id) {  //Mario melody
+int test_melody(int buzzer, int check_id) {
+    int checking_ = 1;
+
+    int melody_test[num_test];
+    for (int i = 0; i < num_test; i++) {
+        melody_test[i] = pgm_read_word(&melody_test_raw[i]);
+    }
+
+    int tempo_test = 80;
+
+    int notes_test = sizeof(melody_test) / sizeof(melody_test[0]) / 2;
+
+    int wholenote_test = (60000 * 4) / tempo_test;
+
+    int divider_test = 0, noteDuration_test = 0;
+
+    for (int thisNote = 0; thisNote < notes_test * 2; thisNote = thisNote + 2) {
+        checking_ = 1;
+
+        divider_test = melody_test[thisNote + 1];
+        if (divider_test > 0) {
+            noteDuration_test = (wholenote_test) / divider_test;
+        }
+        else if (divider_test < 0) {
+            noteDuration_test = (wholenote_test) / abs(divider_test);
+            noteDuration_test *= 1.5;
+        }
+
+        tone(buzzer, melody_test[thisNote], noteDuration_test * 0.9);
+
+        delay(noteDuration_test);
+
+        noTone(buzzer);
+
+        if (rfid_.PICC_IsNewCardPresent()) {
+            if (rfid_.PICC_ReadCardSerial()) {
+                for (int i = 0; i < 4; i++) {
+                    checking_ = rfid_.uid.uidByte[i] + checking_;
+                }
+                if (checking_ != check_id)
+                    return checking_;
+            }
+        }
+    }
+    return check_id;
+}
+
+int mario(int buzzer, int check_id) {  //Mario melody
     int checking_ = 1;
 
     int melody_mario[num_mario];
@@ -828,13 +882,14 @@ void mario(int buzzer, int check_id) {  //Mario melody
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void harrypotter(int buzzer, int check_id) {
+int harrypotter(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_harry[num_harry];
@@ -872,13 +927,14 @@ void harrypotter(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void caribbean(int buzzer, int check_id) {
+int caribbean(int buzzer, int check_id) {
     int checking_ = 1;
 
     int notes_pirate[num_pirate];
@@ -914,13 +970,14 @@ void caribbean(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void pacman(int buzzer, int check_id) {
+int pacman(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_pacman[num_pacman];
@@ -956,14 +1013,16 @@ void pacman(int buzzer, int check_id) {
                 for (int i = 0; i < 4; i++) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
-                if (checking_ != check_id)
-                    break;
+                if (checking_ != check_id) {
+                    return checking_;
+                }
             }
         }
     }
+    return check_id;
 }
 
-void starWars(int buzzer, int check_id) {
+int starWars(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_starWars[num_starWars];
@@ -1000,13 +1059,14 @@ void starWars(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void tetris(int buzzer, int check_id) {
+int tetris(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_tetris[num_tetris];
@@ -1046,13 +1106,14 @@ void tetris(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void minuetG(int buzzer, int check_id) {
+int minuetG(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_minuetG[num_minuetG];
@@ -1093,13 +1154,14 @@ void minuetG(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void lionKing(int buzzer, int check_id) {
+int lionKing(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_lion[num_lion];
@@ -1140,13 +1202,14 @@ void lionKing(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void symphonyNo9(int buzzer, int check_id) {
+int symphonyNo9(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_symphonyNo9[num_symphonyNo9];
@@ -1187,13 +1250,14 @@ void symphonyNo9(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void jigglypuff(int buzzer, int check_id) {
+int jigglypuff(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_jigglypuff[num_jigglypuff];
@@ -1201,7 +1265,7 @@ void jigglypuff(int buzzer, int check_id) {
         melody_jigglypuff[i] = pgm_read_word(&melody_jigglypuff_raw[i]);
     }
 
-    int tempo_jigglypuff = 85;
+    int tempo_jigglypuff = 105;
 
     int notes_jigglypuff = sizeof(melody_jigglypuff) / sizeof(melody_jigglypuff[0]) / 2;
 
@@ -1233,13 +1297,14 @@ void jigglypuff(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void starTrek(int buzzer, int check_id) {
+int starTrek(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_starTrek[num_starTrek];
@@ -1257,7 +1322,6 @@ void starTrek(int buzzer, int check_id) {
 
     for (int thisNote = 0; thisNote < notes_starTrek * 2; thisNote = thisNote + 2) {
         checking_ = 1;
-
 
         divider_starTrek = melody_starTrek[thisNote + 1];
         if (divider_starTrek > 0) {
@@ -1280,13 +1344,14 @@ void starTrek(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void badinerie(int buzzer, int check_id) {
+int badinerie(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_badinerie[num_badinerie];
@@ -1327,13 +1392,14 @@ void badinerie(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void godFather(int buzzer, int check_id) {
+int godFather(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_godFather[num_godFather];
@@ -1374,13 +1440,14 @@ void godFather(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void zeldaTheme(int buzzer, int check_id) {
+int zeldaTheme(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_zeldaTheme[num_zeldaTheme];
@@ -1420,13 +1487,14 @@ void zeldaTheme(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }
 
-void cannon(int buzzer, int check_id) {
+int cannon(int buzzer, int check_id) {
     int checking_ = 1;
 
     int melody_cannon[num_cannon];
@@ -1467,8 +1535,9 @@ void cannon(int buzzer, int check_id) {
                     checking_ = rfid_.uid.uidByte[i] + checking_;
                 }
                 if (checking_ != check_id)
-                    break;
+                    return checking_;
             }
         }
     }
+    return check_id;
 }

@@ -1,19 +1,20 @@
 #include "Arduino.h"
-#ifndef MyLibrary_H
-#define MyLibrary_H
-void caribbean(int buzzer, int check_id);
-void harrypotter(int buzzer, int check_id);
-void pacman(int buzzer, int check_id);
-void starWars(int buzzer, int check_id);
-void mario(int buzzer, int check_id);
-void tetris(int buzzer, int check_id);
-void minuetG(int buzzer, int check_id);
-void lionKing(int buzzer, int check_id);
-void symphonyNo9(int buzzer, int check_id);
-void jigglypuff(int buzzer, int check_id);
-void starTrek(int buzzer, int check_id);
-void badinerie(int buzzer, int check_id);
-void godFather(int buzzer, int check_id);
-void zeldaTheme(int buzzer, int check_id);
-void cannon(int buzzer, int check_id);
+#ifndef buzzer_song
+#define buzzer_song
+int caribbean(int buzzer, int check_id);
+int harrypotter(int buzzer, int check_id);
+int pacman(int buzzer, int check_id);
+int starWars(int buzzer, int check_id);
+int mario(int buzzer, int check_id);
+int tetris(int buzzer, int check_id);
+int minuetG(int buzzer, int check_id);
+int lionKing(int buzzer, int check_id);
+int symphonyNo9(int buzzer, int check_id);
+int jigglypuff(int buzzer, int check_id);
+int starTrek(int buzzer, int check_id);
+int badinerie(int buzzer, int check_id);
+int godFather(int buzzer, int check_id);
+int zeldaTheme(int buzzer, int check_id);
+int cannon(int buzzer, int check_id);
+int test_melody(int buzzer, int check_id);
 #endif
