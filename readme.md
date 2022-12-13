@@ -31,7 +31,7 @@
 - 노래가 정지되지 않고 완곡된 경우 자석이 멀어졌다가 다시 태그되면 다음 노래 재생
 
 ### 결선이미지
-(추가 예정)
+<img src="./img/schematic_reed.png" width="50%" height="50%">
 
 ### 제품사진
 <img src="./img/picture1.jpg" width="50%" height="50%">
