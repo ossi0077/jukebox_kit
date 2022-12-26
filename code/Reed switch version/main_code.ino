@@ -19,7 +19,7 @@
 #include <buzzer_song.h>
 
 int buzzer = 7;  //buzzer 핀 번호
-int reed = 12;   //reed switch digital pin number(자석감지 시 LOW)
+int reed = 12;   //reed switch digital pin number
 int state = 0;
 int number = 0;
 
@@ -31,7 +31,7 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(reed) == LOW) {
+  if (digitalRead(reed) == HIGH) {
     if (state == 0) {
       Serial.println(F("===================== Music Start ====================="));
       switch (number) {
@@ -54,7 +54,7 @@ void loop() {
       Serial.println(F("====================== Music End ======================"));
       state = 1;
     } else return;
-  } else if (digitalRead(reed) == HIGH) {
+  } else if (digitalRead(reed) == LOW) {
     state = 0;
   }
 }

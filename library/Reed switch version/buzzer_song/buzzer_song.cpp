@@ -782,6 +782,7 @@ const int durations_raw[] PROGMEM = {
 const int num_durations = sizeof(durations_raw) / sizeof(durations_raw[0]);
 
 void mario(int buzzer, int check_id) {  //Mario melody
+    int state = 0;
 
     int melody_mario[num_mario];
     for (int i = 0; i < num_mario; i++) {
@@ -811,11 +812,19 @@ void mario(int buzzer, int check_id) {  //Mario melody
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
+
     }
 }
 
 void harrypotter(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_harry[num_harry];
     for (int i = 0; i < num_harry; i++) {
@@ -845,11 +854,18 @@ void harrypotter(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void caribbean(int buzzer, int check_id) {
+    int state = 0;
 
     int notes_pirate[num_pirate];
     for (int i = 0; i < num_pirate; i++) {
@@ -863,7 +879,7 @@ void caribbean(int buzzer, int check_id) {
 
     const float tempo_pirate = 1.0;
     const int totalNotes = sizeof(notes_pirate) / sizeof(int);
-    for (int i = 0; i < totalNotes; i++){
+    for (int i = 0; i < totalNotes; i++) {
 
         const int currentNote = notes_pirate[i];
         float wait = durations[i] / tempo_pirate;
@@ -877,11 +893,18 @@ void caribbean(int buzzer, int check_id) {
         }
         delay(wait);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void pacman(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_pacman[num_pacman];
     for (int i = 0; i < num_pacman; i++) {
@@ -915,6 +938,7 @@ void pacman(int buzzer, int check_id) {
 }
 
 void starWars(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_starWars[num_starWars];
     for (int i = 0; i < num_starWars; i++) {
@@ -943,11 +967,18 @@ void starWars(int buzzer, int check_id) {
         delay(noteDuration_starWars);
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void tetris(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_tetris[num_tetris];
     for (int i = 0; i < num_tetris; i++) {
@@ -979,11 +1010,18 @@ void tetris(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void minuetG(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_minuetG[num_minuetG];
     for (int i = 0; i < num_minuetG; i++) {
@@ -1016,11 +1054,18 @@ void minuetG(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void lionKing(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_lion[num_lion];
     for (int i = 0; i < num_lion; i++) {
@@ -1053,11 +1098,18 @@ void lionKing(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void symphonyNo9(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_symphonyNo9[num_symphonyNo9];
     for (int i = 0; i < num_symphonyNo9; i++) {
@@ -1090,11 +1142,18 @@ void symphonyNo9(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void jigglypuff(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_jigglypuff[num_jigglypuff];
     for (int i = 0; i < num_jigglypuff; i++) {
@@ -1126,11 +1185,18 @@ void jigglypuff(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void starTrek(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_starTrek[num_starTrek];
     for (int i = 0; i < num_starTrek; i++) {
@@ -1162,11 +1228,18 @@ void starTrek(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void badinerie(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_badinerie[num_badinerie];
     for (int i = 0; i < num_badinerie; i++) {
@@ -1199,11 +1272,18 @@ void badinerie(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void godFather(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_godFather[num_godFather];
     for (int i = 0; i < num_godFather; i++) {
@@ -1236,11 +1316,19 @@ void godFather(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void zeldaTheme(int buzzer, int check_id) {
+
+    int state = 0;
 
     int melody_zeldaTheme[num_zeldaTheme];
     for (int i = 0; i < num_zeldaTheme; i++) {
@@ -1272,11 +1360,18 @@ void zeldaTheme(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }
 
 void cannon(int buzzer, int check_id) {
+    int state = 0;
 
     int melody_cannon[num_cannon];
     for (int i = 0; i < num_cannon; i++) {
@@ -1309,6 +1404,12 @@ void cannon(int buzzer, int check_id) {
 
         noTone(buzzer);
 
-        if (digitalRead(check_id) == true) return;
+        if (digitalRead(check_id) == false) {
+            state++;
+            if (state > 1) return;
+        }
+        else {
+            state = 0;
+        }
     }
 }

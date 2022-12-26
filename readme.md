@@ -2,6 +2,9 @@
 - NFC, RFID 모듈을 사용한 버전과 Reed switch와 자석을 이용한 버전 두가지
 - 각 버전별로 라이브러리가 다릅니다.
 
+## 제품 사진
+<img src="./img/picture1.jpg" width="50%" height="50%">
+
 ## Reed swtich version
 
 - Reed switch를 이용하여 자석이 근처에 있을 시 수동부저로 노래 출력
@@ -15,11 +18,11 @@
 ### 사용부품
 - Arduino Nano
 - Passive Buzzer
-- Reed switch module(예정)
-- 자석 3개(예정)
+- Reed switch module
+- 자석 3개(네오디움 원형[지름20mm * 두께 1mm])
 	
 ### 라이브러리
-- buzzer_song	:	설치 필요(zip파일로 설치)
+- buzzer_song	:	설치 필요
 
 ### 사용 방법
 1. 회로 연결
@@ -31,10 +34,7 @@
 - 노래가 정지되지 않고 완곡된 경우 자석이 멀어졌다가 다시 태그되면 다음 노래 재생
 
 ### 결선이미지
-(추가 예정)
-
-### 제품사진
-<img src="./img/picture1.jpg" width="50%" height="50%">
+<img src="./img/schematic_reed.png" width="50%" height="50%">
 
 
 ## NFC, RFID version
@@ -74,9 +74,6 @@
 ### 결선이미지
 <img src="./img/schematic_RC522.png" width="50%" height="50%">
 
-### 제품사진
-<img src="./img/picture1.jpg" width="50%" height="50%">
-
 ## 일자별 진행상황
 |날짜|진행사항|특이사항|
 |--|--|--|
@@ -85,3 +82,4 @@
 |2022/11/02|코드 수정|노래를 정지시키지 않을 시 완곡 후 반복재생되는 문제 해결|
 |2022/12/05|연결사진, 제품사진 업로드|Update readme|
 |2022/12/12|Reed swtich 사용 버전 업로드|리드 스위치 실제 테스트 후 readme파일 수정 필요|
+|2022/12/26|Reed swtich 코드, 라이브러리 수정||
